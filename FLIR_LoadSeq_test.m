@@ -13,38 +13,39 @@
 %		applySuperfame;			% Collapse subframes into a superframe (0, 1)
 %		objectParameters;		% Save Object Parameter structure (0, 1)
 
-close all; clc; clear
-
+ clc; clear
+addpath('FUNCTIONS')
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %INPUTS
-    %%%%%%%%
-    %Options for Loading data
-        unit = 'temperatureFactory';
-        temperatureType = 'kelvin';
-        applyNuc = 0;
-        applyBadPixels = 0;
-        applySuperframe = 0;
-        objectParameters = 1;
-        %Change Object Parameters from default if objectParameters == 1
-            objectParameters.emissivity = 1;
-            objectParameters.distance = 1;
-            objectParameters.reflectedTemp = 293.15;
-            objectParameters.atmosphereTemp = 293.15;
-            objectParameters.extOpticsTemp = 293.15;
-            objectParameters.extOpticsTransmission = 1;
-            objectParameters.estAtmosphericTransmission = 0;
-            objectParameters.atmosphericTransmission = 1;
-            objectParameters.relativeHumidity = 0;
-    %Options for Loading data
-    %%%%%%%%
-    file = 'G:\FLIR DATA 19 oct 2017\Expensive-000012-292_10_48_53_907.ats';
-    %file = '/Volumes/ACHILLIES/FLIR DATA 19 oct 2017/Expensive-000012-292_10_48_53_907.ats';
-    freq = 10; %Frequency of data collection (Hz)
-    startTime = 0; %start time relative to start of file (s)
-    endTime = 5*60; %end time relative to start of file (s)
-    timeSkip = 0; %time to skip between frames (s)
-    MetaDataFreq = 5*60; %frequency with which to save meta data (s)
-%INPUTS    
+%%%%%%%%
+%Options for Loading data
+unit = 'temperatureFactory';
+temperatureType = 'kelvin';
+applyNuc = 0;
+applyBadPixels = 0;
+applySuperframe = 0;
+
+%Change Object Parameters from default
+objectParameters.emissivity = 0;
+objectParameters.distance = 1;
+objectParameters.reflectedTemp = 293.15;
+objectParameters.atmosphereTemp = 293.15;
+objectParameters.extOpticsTemp = 293.15;
+objectParameters.extOpticsTransmission = 1;
+objectParameters.estAtmosphericTransmission = 1;
+objectParameters.atmosphericTransmission = 1;
+objectParameters.relativeHumidity = 0;
+
+%Options for Loading data
+%%%%%%%%
+file = 'H:\Data\TIR_test_fall_17\FLIR DATA 19 oct 2017\Expensive-000012-292_10_48_53_907.ats';
+%file = '/Volumes/ACHILLIES/FLIR DATA 19 oct 2017/Expensive-000012-292_10_48_53_907.ats';
+freq = 10; %Frequency of data collection (Hz)
+startTime = 0; %start time relative to start of file (s)
+endTime = 5*60; %end time relative to start of file (s)
+timeSkip = 0; %time to skip between frames (s)
+MetaDataFreq = 5*60; %frequency with which to save meta data (s)
+%INPUTS
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -56,13 +57,13 @@ Image_Seq.applyNuc = logical(applyNuc);
 Image_Seq.applyBadPixels = logical(applyBadPixels);
 Image_Seq.applySuperfame = logical(applySuperframe);
 
-%Save object parameter structure 
-if objectParameters
+%Save object parameter structure
+%if objectParameters
     Params = fieldnames(Image_Seq.objectParameters);
     for ii=length(Params)
         Image_Seq.objectParameters.(Params{ii}) = objectParameters.(Params{ii});
     end
-end
+%end
 
 %convert Time to frames
 startFrame = startTime*freq;
@@ -88,13 +89,16 @@ for ii=startFrame:frameSkip:endFrame
     end
 end
 toc;
-
+figure()
+pcolor(flip(frame(:,:,1))); shading interp
+colorbar
 %%%%%%%%%%%%%%%
 %Create and play movie
-% % 
-% % for ii=1:size(frame,3)
-% %     imagesc(frame(:, :, ii))
-% %     drawnow
-% %     F(ii) = getframe;
-% % end
-% % movie(F)
+
+% for ii=1:size(frame,3)
+%     imagesc(frame(:, :, ii))
+%     drawnow
+%     colorbar
+%     F(ii) = getframe;
+% end
+% movie(F)

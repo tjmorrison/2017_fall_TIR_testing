@@ -1,6 +1,6 @@
 % FlirMovieReader MATLAB class for reading flir file formats
 classdef FlirMovieReader < handle
-	properties (SetAccess = private, Hidden = true)
+	properties (SetAccess = public, Hidden = false)
 		impl;					% Handle to class implemented in mex
 	end
 	properties
@@ -11,7 +11,7 @@ classdef FlirMovieReader < handle
 		applySuperfame;			% Collapse subframes into a superframe
 		objectParameters;		% Object Parameter structure
 	end
-	properties (SetAccess = private)
+	properties (SetAccess = public)
 		frameIndex;				% Index of the last frame read
 	end
 	methods
@@ -78,7 +78,12 @@ classdef FlirMovieReader < handle
 
 		function ret = getStatus(obj)
 			ret = FlirMovieReaderMex('getStatus', obj.impl);
-		end
+        end
+        
+        function ret = travisMom(obj, value)
+            FlirMovieReaderMex('setObjectParameters', obj.impl, value);
+            ret = 1;
+        end
 
 		% property accessor/mutator
 		function ret = get.unit(obj)

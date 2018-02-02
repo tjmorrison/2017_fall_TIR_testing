@@ -71,6 +71,8 @@ endFrame = endTime*freq;
 MetaFrameFreq = MetaDataFreq*freq;
 frameSkip = timeSkip*freq+1;
 
+img = Image_Seq;
+
 cntr = 1;       %counter for saving frames
 cntrMeta = 1;   %counter for saving metaData
 
